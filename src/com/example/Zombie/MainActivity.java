@@ -26,14 +26,17 @@ public class MainActivity extends Form implements HandlesEventDispatching {
     void $define() {
         this.ScreenOrientation("portrait");
 
-        this.Title("Hello zombie");
+        // Set the screen name title
+        this.Title("Hello Zombie");
 
+        // Set the screens background color and background image
         this.BackgroundColor(COLOR_NONE);
         this.BackgroundImage("SplatterBackground.png");
         this.Scrollable(false);
 
         textToSpeech = new TextToSpeech(this);
 
+        // Create the label and put it on the screen in the center
         touchZombieLabel = new Label(this);
         touchZombieLabel.Text("Touch the Zombie");
         touchZombieLabel.FontSize(20.f);
@@ -51,6 +54,11 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         zombieButton.Height(zombieImageHeight);
         zombieButton.TextAlignment(Component.ALIGNMENT_CENTER);
 
+        // Initialize Zombie attack sound
+        zombieAttackSound = new Sound(this);
+        zombieAttackSound.Source("ZombieAttack.wav");
+
+        // Make zombie moan when it is clicked
         zombieMoanSound = new Sound(this);
         zombieMoanSound.Source("ZombieMoan.wav");
 
@@ -79,20 +87,25 @@ public class MainActivity extends Form implements HandlesEventDispatching {
             if (!gpsProviderName.equals("gps")) {
                 notifier.ShowAlert("Enable GPS in Settings");
 
-                activityStarter.Action("android.settings.LOCATION_SOIRCE_SETTINGS");
+
+                // Open the settings where the user enables GPS
+                activityStarter.Action("android.settings.LOCATION_SOURCE_SETTINGS");
                 activityStarter.StartActivity();
+
             }
             latitude = Double.toString(locationSensor.Latitude());
             longitude = Double.toString(locationSensor.Longitude());
 
-            textToSpeech.Speak("Zombies latitude is " + latitude + " Zombies longtitude is " + longitude);
+
+            // Convert text provided to speech
+            textToSpeech.Speak("Zombies latitude is " + latitude + " Zombies longitude is " + longitude);
 
             return true;
-        } else if (component.equals(accelerometerSensor) && eventName.equals("Shaking")) {
+        } else if( component.equals(accelerometerSensor) && eventName.equals("Shaking")){
             zombieAttackSound.Play();
-
             return true;
         }
         return false;
     }
+
 }
